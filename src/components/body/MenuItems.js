@@ -5,7 +5,7 @@ const MenuItems = props =>{
     //console.log(props)
     return(
         <div>
-            <Card style={{ margin: "10px" }}>
+            <Card>
                 <CardBody>
                     <CardImg
                     width = "100%" 
@@ -14,7 +14,7 @@ const MenuItems = props =>{
                     style={{opacity: '0.5'}} 
                     />
                     <CardImgOverlay >
-                        <CardTitle> {props.dish.name} </CardTitle>
+                        <CardTitle onClick={()=> props.setectedDish(props.dish) } > {props.dish.name} </CardTitle>
                     </CardImgOverlay>
                 </CardBody>
             </Card>
