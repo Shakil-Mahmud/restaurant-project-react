@@ -10,6 +10,7 @@ const Comments = props =>{
                         <strong>{comment.author} </strong>
                         <small>{dateFormat(comment.date," mmm dS, yyyy, h:MM TT")}</small>
                         <p>{comment.comment}</p>
+                        <p>Rating: {comment.rating}</p>
                     </div>
                 )
             }

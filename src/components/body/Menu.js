@@ -1,14 +1,33 @@
 import React from 'react'
 import MenuItems from './MenuItems'
-import COMMENTS from '../../data/comments'
-import DISHES from '../../data/dishes'
 import DishDetail from './DishDetail'
 import {CardColumns, Modal, ModalBody, ModalFooter, Button} from 'reactstrap'
+import {connect} from 'react-redux'
+import * as actionTypes from '../../redux/actionTypes'
+
+const mapStateToProps = state =>{
+    return{
+        dishes: state.dishes,
+        comments: state.comments
+    }
+}
+
+const mapDispatchToProps = dispatch =>{
+    return{
+        addComment: (dishId, rating, author, comment)=> dispatch({
+            type: actionTypes.ADD_COMMENT,
+            payload: {
+                dishId: dishId,
+                author: author,
+                rating: rating,
+                comment: comment
+            }
+        })
+    }
+}
 
 class Menu extends React.Component{
     state = {
-        dishes: DISHES,
-        comments: COMMENTS,
         selected_dish: null,
         isModalOpen: false
     }
@@ -21,7 +40,7 @@ class Menu extends React.Component{
 
     render(){
         document.title= 'Menu';
-        const menu = this.state.dishes.map(
+        const menu = this.props.dishes.map(
             item =>{
                 return(
                     <MenuItems 
@@ -35,9 +54,10 @@ class Menu extends React.Component{
 
         let selected_dish = null;
         if(this.state.selected_dish!=null){
-            const comments = this.state.comments.filter(comment=> this.state.selected_dish.id===comment.dishId)
+            const comments = this.props.comments.filter(comment=> this.state.selected_dish.id===comment.dishId)
             selected_dish= <DishDetail dish={this.state.selected_dish}
-            comments = {comments} />
+            comments = {comments} 
+            addComment = {this.props.addComment} />
         }
 
         return(
@@ -47,7 +67,7 @@ class Menu extends React.Component{
                     {menu}
                     </CardColumns>
                     <Modal isOpen={this.state.isModalOpen}>
-                        <ModalBody onClick={this.onModalToogle}>
+                        <ModalBody>
                             {selected_dish}
                         </ModalBody>
                         <ModalFooter>
@@ -60,4 +80,4 @@ class Menu extends React.Component{
     }
 }
 
-export default Menu;
+export default connect(mapStateToProps,mapDispatchToProps)(Menu);
