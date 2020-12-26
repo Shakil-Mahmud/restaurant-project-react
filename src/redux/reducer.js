@@ -1,36 +1,58 @@
-import COMMENTS from '../data/comments';
 import { combineReducers } from 'redux';
+import { InitialContactForm } from './forms';
+import { actions, createForms } from 'react-redux-form';
 import * as actionTypes from './actionTypes';
-import {InitialContactForm} from './form';
-import {createForms} from 'react-redux-form'
 
-const dishReducer = (dishState = { isLoading: false, dishes: [] }, action) => {
+const dishReducer = (dishState = { isLoading: false, errMsg: null, dishes: [] }, action) => {
     switch (action.type) {
         case actionTypes.DISHES_LOADING:
             return {
                 ...dishState,
                 isLoading: true,
+                errMsg: null,
                 dishes: []
             }
         case actionTypes.LOAD_DISHES:
             return {
                 ...dishState,
                 isLoading: false,
+                errMsg: null,
                 dishes: action.payload
+            }
+        case actionTypes.DISHES_LOADING_FAILED:
+            return{
+                ...dishState,
+                isLoading: false,
+                errMsg: action.payload,
+                dishes: []
             }
         default:
             return dishState;
     }
 }
 
-const commentReducer = (commentState = COMMENTS, action) => {
+const commentReducer = (commentState = { isLoading: true, comments: [] }, action) => {
     switch (action.type) {
+        case actionTypes.LOAD_COMMENTS:
+            return {
+                ...commentState,
+                isLoading: false,
+                comments: action.payload
+            };
+
+        case actionTypes.COMMENT_LOADING:
+            return {
+                ...commentState,
+                isLoading: true,
+                comments: []
+            };
+
         case actionTypes.ADD_COMMENT:
-            let comment = action.payload;
-            comment.id = commentState.length;
-            comment.date = new Date().toDateString();
-            //console.log(comment);
-            return commentState.concat(comment);
+            const comment = action.payload;
+            return{
+                ...commentState,
+                comments: commentState.comments.concat(comment)
+            }
         default:
             return commentState;
     }
